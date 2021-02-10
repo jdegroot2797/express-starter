@@ -1,12 +1,12 @@
-import { scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
+const { scrypt, randomBytes } = require('crypto');
+const { promisify } = require('util');
 
 // scrypt is callback based, promisify used to let
 // scrypt be promise based implementation
 // output from scrypt is a buffer... must convert to a string
 const scryptAsync = promisify(scrypt);
 
-export class PasswordManager {
+class PasswordManager {
   static async toHash(password) {
     const salt = randomBytes(8).toString('hex');
     const buf = await scryptAsync(password, salt, 64);
@@ -23,3 +23,5 @@ export class PasswordManager {
     return buf.toString('hex') === hashedPassword;
   }
 }
+
+module.exports = PasswordManager;

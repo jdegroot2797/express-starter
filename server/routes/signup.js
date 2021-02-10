@@ -1,5 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
+const { User } = require('../models/user');
 const router = express.Router();
 
 router.post(
@@ -18,30 +19,30 @@ router.post(
     const { email, password } = req.body;
 
     // check if the user already exists
-    //const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
     // handle existing user
-    // if (existingUser) {
-    //   res.status(400).send('Email already in use');
-    // }
+    if (existingUser) {
+      res.status(400).send('Email already in use');
+    }
 
     // creation of the users
-    //const user = User.create({ email, password });
-    //await user.save();
+    const user = User.build({ email, password });
+    await user.save();
 
     // generate a JWT token for authentication
-    // const userJWT = jwt.sign(
-    //   {
-    //     id: user.id,
-    //     email: user.email,
-    //   },
-    //   process.env.JWT_KEY
-    // );
+    const userJWT = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_KEY
+    );
 
-    // // store JWT token in the session
-    // req.session = {
-    //   jwt: userJWT,
-    // };
+    // store JWT token in the session
+    req.session = {
+      jwt: userJWT,
+    };
 
     // send back a response
     res.status(201).send({ response: req.body });
