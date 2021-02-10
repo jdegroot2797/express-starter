@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const PasswordManager = require('../services/password-manager');
 
 const userSchema = mongoose.Schema(
   {
@@ -27,7 +28,18 @@ const userSchema = mongoose.Schema(
   }
 );
 
-//TODO: add password hashing middleware to mongo save
+// access the middleware, this will run before mongoose
+// executs a save() on a schema object
+// must use 'function' keyword or the context is lost to the document
+// and will look at this files context instead of db's document
+userSchema.pre('save', async function (done) {
+  // only attempt to hash password if password has been modified
+  if (this.isModified('password')) {
+    const hashed = await PasswordManager.toHash(this.get('password'));
+    this.set('password', hashed);
+  }
+  done();
+});
 
 // custom function to create a mongoose user object with type checking
 userSchema.statics.build = (attrs) => {
