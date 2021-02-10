@@ -1,6 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { User } = require('../models/user');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const router = express.Router();
 
 router.post(
@@ -24,6 +25,7 @@ router.post(
     // handle existing user
     if (existingUser) {
       res.status(400).send('Email already in use');
+      throw Error('Email already in use');
     }
 
     // creation of the users
@@ -45,7 +47,7 @@ router.post(
     };
 
     // send back a response
-    res.status(201).send({ response: req.body });
+    res.status(201).send({ user });
   }
 );
 
