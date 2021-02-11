@@ -24,8 +24,8 @@ router.post(
 
     // handle existing user
     if (existingUser) {
-      res.status(400).send('Email already in use');
-      throw Error('Email already in use');
+      //TODO: error handling
+      console.log('Email already in use');
     }
 
     // creation of the users
@@ -47,7 +47,7 @@ router.post(
     };
 
     // send back a response
-    res.status(201).send({ user });
+    res.status(201).send(user);
   }
 );
 

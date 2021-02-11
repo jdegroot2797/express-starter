@@ -9,7 +9,8 @@ const mongoose = require('mongoose');
 
 const indexRouter = require('./routes/index');
 const pingRouter = require('./routes/ping');
-const signupRouter = require('./routes/signup');
+const registerRouter = require('./routes/register');
+const loginRouter = require('./routes/login');
 
 const { json, urlencoded } = express;
 
@@ -23,7 +24,8 @@ app.use(express.static(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/ping', pingRouter);
-app.use('/signup', signupRouter);
+app.use('/register', registerRouter);
+app.use('/login', loginRouter);
 
 // ensure environment variables are defined
 // attempt a connection to mongodb
