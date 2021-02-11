@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const { join } = require('path');
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const logger = require('morgan');
 
 // MongoDB will be DB of choice
@@ -11,6 +12,7 @@ const indexRouter = require('./routes/index');
 const pingRouter = require('./routes/ping');
 const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
+const currentUserRouter = require('./routes/current-user');
 
 const { json, urlencoded } = express;
 
@@ -20,12 +22,14 @@ app.use(logger('dev'));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cookieSession({ signed: false }));
 app.use(express.static(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/ping', pingRouter);
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
+app.use('/currentuser', currentUserRouter);
 
 // ensure environment variables are defined
 // attempt a connection to mongodb
